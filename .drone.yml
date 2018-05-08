@@ -1,0 +1,15 @@
+workspace:
+  base: /rootfs
+  path: /
+pipeline:
+  build:
+    image: dvitali/android-build:feb-20
+    commands:
+      - "mkdir -p out/{arch,void}"
+      - "DISTRO=arch SYSROOT=out/arch TOP=$(pwd) ./build.sh"
+  github_release:
+    image: plugins/github-release
+    secrets: [ github_token ]
+    files: out/*_rootfs.tar.gz
+    when:
+      event: tag
