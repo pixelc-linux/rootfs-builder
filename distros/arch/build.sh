@@ -1,5 +1,4 @@
 #!/bin/bash
-source ../../build.sh
 DISTRO_NAME="Arch Linux ARM"
 
 echo -e '
@@ -43,8 +42,8 @@ else
   wget -O /tmp/rootfs_builder_$DISTRO.tar.gz -q 'http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz'
 fi
 
-#e_status "Extracting..."
-#bsdtar -xpf /tmp/rootfs_builder_$DISTRO.tar.gz -C $SYSROOT 1>/dev/null 2>/dev/null
+e_status "Extracting..."
+bsdtar -xpf /tmp/rootfs_builder_$DISTRO.tar.gz -C $SYSROOT
 
 e_status "QEMU-chrooting"
 
