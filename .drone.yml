@@ -1,6 +1,7 @@
 services:
   docker:
-    privileged: true
+    image: dvitali/android-build:may-9-3
+      privileged: true
 workspace:
   base: /rootfs
 pipeline:
