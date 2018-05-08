@@ -5,7 +5,7 @@ pipeline:
   build:
     image: dvitali/android-build:feb-20
     commands:
-      - "mkdir -p out/{arch,void}"
+      - "mkdir -p out/arch"
       - "DISTRO=arch SYSROOT=out/arch TOP=$(pwd) ./build.sh"
   github_release:
     image: plugins/github-release
