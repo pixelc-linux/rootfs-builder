@@ -42,6 +42,10 @@ sudo chown -R $UID:$GID $SYSROOT
 
 distros/$DISTRO/build.sh
 
+if [ "$?" -ne "0" ]; then
+  exit 1;
+fi 
+
 # Chmod
 sudo chown -R 0:0 $SYSROOT/
 sudo chown -R 1000:1000 $SYSROOT/home/alarm
