@@ -1,11 +1,15 @@
+services:
+  docker:
+    privileged: true
 workspace:
   base: /rootfs
 pipeline:
   build:
     image: dvitali/android-build:may-9-3
     commands:
-      - "mkdir -p out/arch/rootfs"
+      - "bash -c 'mkdir -p out/{arch,ubuntu}/rootfs'"
       - "UID=0 GID=0 DISTRO=arch SYSROOT=out/arch/rootfs TOP=$(pwd) ./build.sh"
+      - "UID=0 GID=0 DISTRO=ubuntu SYSROOT=$(pwd)/out/ubuntu/rootfs TOP=$(pwd) ./build.sh"
   github_release:
     image: plugins/github-release
     secrets: [ github_token ]
