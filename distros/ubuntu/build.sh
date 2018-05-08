@@ -39,7 +39,7 @@ function e_status(){
 #fi
 
 function run_in_qemu(){
-  PROOT_NO_SECCOMP=1 proot -0 -r $SYSROOT -q qemu-$ARCH-static -b /etc/resolv.conf -b /bin/bash:/bin/sh -b /etc/mtab -b /proc -b /sys -b /tmp $*
+  PROOT_NO_SECCOMP=1 proot -0 -r $SYSROOT -q qemu-$ARCH-static -b /etc/resolv.conf -b /etc/mtab -b /proc -b /sys $*
 }
 
 
@@ -53,11 +53,12 @@ else
 fi
 
 e_status "Extracting..."
-bsdtar -xpf /tmp/rootfs_builder_$DISTRO.tar.gz -C $SYSROOT
-
 cat >> $SYSROOT/root/.bashrc << EOF
 export PATH=/usr/local/sbin:/usr/sbin:/sbin:/bin:$PATH
 EOF
+
+tar -xvf /tmp/rootfs_builder_$DISTRO.tar.gz -C $SYSROOT
+ls -la $SYSROOT
 
 e_status "QEMU-chrooting"
 
@@ -95,12 +96,12 @@ ubuntu-minimal
 e_status "Installing packages..."
 
 OLDPATH=$PATH
-export PATH=/usr/local/sbin:/usr/sbin:/sbin:/bin:/usr/bin
+#export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/sbin:/bin:/usr/bin
 
 export DEBIAN_FRONTEND=noninteractive
 export DEBCONF_NONINTERACTIVE_SEEN=true
 
-cp $SYSROOT/usr/share/zoneinfo/Europe/Zurich $SYSROOT/etc/localtime
+#cp $SYSROOT/usr/share/zoneinfo/Europe/Zurich $SYSROOT/etc/localtime
 echo "Europe/Zurich" > $SYSROOT/etc/timezone
 
 run_in_qemu apt-get install -y $packages
