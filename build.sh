@@ -56,4 +56,4 @@ sudo chmod +s $SYSROOT/bin/mount
 sudo chmod +s $SYSROOT/bin/su
 
 cd $SYSROOT
-sudo tar -cvpzf $TOP/out/rootfs.tar.gz .
+sudo tar -cvpzf $TOP/out/$DISTRO_rootfs.tar.gz .
