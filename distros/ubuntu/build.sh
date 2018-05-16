@@ -34,14 +34,9 @@ function e_status(){
   echo -e '\e[1;33m'${1}'\e[0;37m'
 }
 
-#if [ "$ARCH" -eq "arm64" ]; then
-#  QEMU_ARCH="aarch64"
-#fi
-
 function run_in_qemu(){
   PROOT_NO_SECCOMP=1 proot -0 -r $SYSROOT -q qemu-$ARCH-static -b /etc/resolv.conf -b /etc/mtab -b /proc -b /sys $*
 }
-
 
 ROOTFS_URL='http://cdimage.ubuntu.com/ubuntu-base/releases/18.04/release/ubuntu-base-18.04-base-arm64.tar.gz'
 
@@ -91,6 +86,11 @@ bluez
 sudo
 binutils
 ubuntu-minimal
+network-manager
+lightdm
+lightdm-gtk-greeter
+openbox
+onboard
 "
 
 e_status "Installing packages..."
@@ -104,14 +104,14 @@ export DEBCONF_NONINTERACTIVE_SEEN=true
 #cp $SYSROOT/usr/share/zoneinfo/Europe/Zurich $SYSROOT/etc/localtime
 echo "Europe/Zurich" > $SYSROOT/etc/timezone
 
-run_in_qemu apt-get install -y $packages
+cp /etc/resolv.conf $SYSROOT/etc/resolv.conf
+ln -s $SYSROOT/run/systemd/journal/dev-log $SYSROOT/dev/log
 
-export PATH=$OLDPATH
-exit 1
-run_in_qemu apt-get install -y apt-utils binutils
-run_in_qemu apt-get install -y $packages
+run_in_qemu uname -a
+run_in_qemu apt-get update
+run_in_qemu apt-get upgrade
 
-exit 1
+run_in_qemu apt-get install -y $packages
 
 e_status "Setting hostname..."
 echo "pixel-c" > $SYSROOT/etc/hostname
