@@ -205,8 +205,8 @@ root_ph='$6$WTgiFCC4$RZ8IN2IkFcLe1tkZAxUdbdS0awm3nUrmyluLAeUhBYf76NIeoBuqinnBIId
 # Hash for "pixelc"
 pixelc_ph='$6$4MU8USEH$.7mTml0Rq3FkMqmYKw44UQf9lkLp3UCGsY0MYDHK9xIyup6Dc4g/MOtPMDIGxjypH367cPRHPsoxaDdf3yJ9s.'
 
-sed -i $SYSROOT/etc/shadow "s#root:[^:]+:#root:$root_ph:#g"
-sed -i $SYSROOT/etc/shadow "s#pixelc:[^:]+:#pixelc:$pixelc_ph:#g"
+sed -i -E "s#root:[^:]+:#root:$root_ph:#g" $SYSROOT/etc/shadow
+sed -i -E "s#pixelc:[^:]+:#pixelc:$pixelc_ph:#g" $SYSROOT/etc/shadow
 
 e_status "Adding BCM4354.hcd"
 wget -O $SYSROOT/lib/firmware/brcm/BCM4354.hcd 'https://github.com/denysvitali/linux-smaug/blob/v4.17-rc3/firmware/bcm4354.hcd?raw=true'
