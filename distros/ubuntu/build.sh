@@ -52,7 +52,7 @@ cat >> $SYSROOT/root/.bashrc << EOF
 export PATH=/usr/local/sbin:/usr/sbin:/sbin:/bin:$PATH
 EOF
 
-tar -xvf /tmp/rootfs_builder_$DISTRO.tar.gz -C $SYSROOT
+tar -xf /tmp/rootfs_builder_$DISTRO.tar.gz -C $SYSROOT
 ls -la $SYSROOT
 
 e_status "QEMU-chrooting"
@@ -195,6 +195,18 @@ cat > $SYSROOT/home/alarm/.config/openbox/autostart <<EOF
 kitty &
 onboard &
 EOF
+
+e_status "Add users"
+run_in_qemu useradd pixelc
+
+e_status "Set passwords"
+# Hash for "root"
+root_ph='$6$WTgiFCC4$RZ8IN2IkFcLe1tkZAxUdbdS0awm3nUrmyluLAeUhBYf76NIeoBuqinnBIIdxnSB1.PHzDVjVZ1qi8PaHsD/lt1'
+# Hash for "pixelc"
+pixelc_ph='$6$4MU8USEH$.7mTml0Rq3FkMqmYKw44UQf9lkLp3UCGsY0MYDHK9xIyup6Dc4g/MOtPMDIGxjypH367cPRHPsoxaDdf3yJ9s.'
+
+sed -i $SYSROOT/etc/shadow "s/root:[^:]+:/root:$root_ph:/g"
+sed -i $SYSROOT/etc/shadow "s/pixelc:[^:]+:/pixelc:$pixelc_ph:/g"
 
 e_status "Adding BCM4354.hcd"
 wget -O $SYSROOT/lib/firmware/brcm/BCM4354.hcd 'https://github.com/denysvitali/linux-smaug/blob/v4.17-rc3/firmware/bcm4354.hcd?raw=true'
