@@ -92,7 +92,7 @@ lxdm
 openbox
 onboard
 openssh-server
-xorg-server
+xorg
 "
 
 e_status "Installing packages..."
@@ -159,9 +159,10 @@ if [ -z "$KBD_BT_ADDR" ]; then
   cat > $SYSROOT/etc/btkbd.conf <<EOF
 BTKBDMAC = '$KBD_BT_ADDR'
 EOF
-  e_status "=> Adding BT Keyboard service"
 
-  cat > $SYSROOT/etc/systemd/system/btkbd.service <<EOF
+e_status "=> Adding BT Keyboard service"
+
+cat > $SYSROOT/etc/systemd/system/btkbd.service <<EOF
 [Unit]
 Description=systemd Unit to automatically start a Bluetooth keyboard
 Documentation=https://wiki.archlinux.org/index.php/Bluetooth_Keyboard
@@ -179,12 +180,12 @@ EOF
   run_in_qemu systemctl enable btkbd
 fi
 
-if [ ! -z "$KB_LAYOUT" -o -! -z "$KB_MAP" ]; then
-  KB_LAYOUT = "ch"
-  KB_MAP = "de"
+if [[ -z $KB_LAYOUT ]] || [[ -z $KB_MAP ]]; then
+  KB_LAYOUT="ch"
+  KB_MAP="de"
 fi
 
-cat > /etc/X11/xorg.conf.d/00-keyboard.conf <<EOF
+cat > $SYSROOT/etc/X11/xorg.conf.d/00-keyboard.conf <<EOF
 Section "InputClass"
         Identifier "system-keyboard"
         MatchIsKeyboard "on"
