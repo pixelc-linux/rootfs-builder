@@ -47,13 +47,14 @@ else
   wget -O /tmp/rootfs_builder_$DISTRO.tar.gz -q $ROOTFS_URL
 fi
 
-e_status "Extracting..."
-cat >> $SYSROOT/root/.bashrc << EOF
-export PATH=/usr/local/sbin:/usr/sbin:/sbin:/bin:$PATH
-EOF
+e_status "Downloading Firmware Files"
+wget $(curl https://api.github.com/repos/pixelc-linux/firmware-releases/releases/latest | jq -r '.assets[] | select(.name == "firmware_all.tar.gz") | .browser_download_url') -O /tmp/firmware_all.tar.gz
 
+e_status "Extracting RootFS..."
 tar -xf /tmp/rootfs_builder_$DISTRO.tar.gz -C $SYSROOT
-ls -la $SYSROOT
+
+e_status "Extracting Firmware Files..."
+tar -xf /tmp/firmware_all.tar.gz -C $SYSROOT
 
 e_status "QEMU-chrooting"
 
@@ -87,8 +88,7 @@ sudo
 binutils
 ubuntu-minimal
 network-manager
-lightdm
-lightdm-gtk-greeter
+lxdm
 openbox
 onboard
 "
@@ -117,7 +117,8 @@ e_status "Setting hostname..."
 echo "pixel-c" > $SYSROOT/etc/hostname
 
 run_in_qemu systemctl enable NetworkManager
-run_in_qemu systemctl enable lightdm
+#run_in_qemu systemctl enable lightdm
+run_in_qemu systemctl enable lxdm
 run_in_qemu systemctl enable bluetooth
 run_in_qemu systemctl enable dhcpcd
 
@@ -154,7 +155,7 @@ if [ -z "$KBD_BT_ADDR" ]; then
   e_status "Configuring BT Keyboard"
   
   cat > $SYSROOT/etc/btkbd.conf <<EOF
-BTKBDMAC = ''$KBD_BT_ADDR''
+BTKBDMAC = '$KBD_BT_ADDR'
 EOF
   e_status "=> Adding BT Keyboard service"
 
@@ -168,7 +169,7 @@ ConditionPathExists=/usr/bin/bluetoothctl
 [Service]
 Type=oneshot
 EnvironmentFile=/etc/btkbd.conf
-ExecStart=/usr/bin/bluetoothctl connect ${BTKBDMAC}
+ExecStart=/usr/bin/bluetoothctl connect \$\{BTKBDMAC\}
 
 [Install]
 WantedBy=bluetooth.target
@@ -190,6 +191,11 @@ Section "InputClass"
 EndSection
 EOF
 
+# FSTAB, assume that the rootfs is in /system
+cat > /etc/fstab << EOF
+/dev/mmcblk0p4    /               ext4            rw,relatime,data=ordered        0 1
+EOF
+
 mkdir -p $SYSROOT/home/alarm/.config/openbox
 cat > $SYSROOT/home/alarm/.config/openbox/autostart <<EOF 
 kitty &
@@ -197,7 +203,7 @@ onboard &
 EOF
 
 e_status "Add users"
-run_in_qemu useradd pixelc
+run_in_qemu useradd -m pixelc
 
 e_status "Set passwords"
 # Hash for "root"
