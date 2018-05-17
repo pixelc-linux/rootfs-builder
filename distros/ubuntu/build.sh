@@ -91,6 +91,8 @@ network-manager
 lxdm
 openbox
 onboard
+openssh-server
+xorg-server
 "
 
 e_status "Installing packages..."
@@ -105,7 +107,6 @@ export DEBCONF_NONINTERACTIVE_SEEN=true
 echo "Europe/Zurich" > $SYSROOT/etc/timezone
 
 cp /etc/resolv.conf $SYSROOT/etc/resolv.conf
-ln -s $SYSROOT/run/systemd/journal/dev-log $SYSROOT/dev/log
 
 run_in_qemu uname -a
 run_in_qemu apt-get update
@@ -117,10 +118,11 @@ e_status "Setting hostname..."
 echo "pixel-c" > $SYSROOT/etc/hostname
 
 run_in_qemu systemctl enable NetworkManager
-#run_in_qemu systemctl enable lightdm
 run_in_qemu systemctl enable lxdm
 run_in_qemu systemctl enable bluetooth
 run_in_qemu systemctl enable dhcpcd
+run_in_qemu systemctl enable sshd
+
 
 e_status "Adding Keyboard to LightDM"
 sed -i 's/#keyboard=/keyboard=onboard/' $SYSROOT/etc/lightdm/lightdm-gtk-greeter.conf
@@ -196,11 +198,8 @@ cat > $SYSROOT/etc/fstab << EOF
 /dev/mmcblk0p4    /               ext4            rw,relatime,data=ordered        0 1
 EOF
 
-mkdir -p $SYSROOT/home/alarm/.config/openbox
-cat > $SYSROOT/home/alarm/.config/openbox/autostart <<EOF 
-kitty &
-onboard &
-EOF
+e_status "Set up LXDM autologin"
+sed -E 's/# autologin=.*/autologin=pixelc/g' -i $SYSROOT/etc/lxdm/lxdm.conf
 
 e_status "Add users"
 run_in_qemu useradd -m pixelc
