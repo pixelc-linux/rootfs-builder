@@ -192,7 +192,7 @@ EndSection
 EOF
 
 # FSTAB, assume that the rootfs is in /system
-cat > /etc/fstab << EOF
+cat > $SYSROOT/etc/fstab << EOF
 /dev/mmcblk0p4    /               ext4            rw,relatime,data=ordered        0 1
 EOF
 
