@@ -72,8 +72,11 @@ dialog
 mesa
 networkmanager"
 
+run_in_qemu rm -R /etc/pacman.d/gnupg/
+run_in_qemu gpg --refresh-keys
 run_in_qemu pacman-key --init
 run_in_qemu pacman-key --populate archlinuxarm
+run_in_qemu pacman-key --refresh-keys
 
 e_status "Installing packages..."
 run_in_qemu pacman -Syu --needed --noconfirm $packages
