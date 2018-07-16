@@ -74,9 +74,14 @@ networkmanager"
 
 run_in_qemu rm -R /etc/pacman.d/gnupg/
 run_in_qemu gpg --refresh-keys
+run_in_qemu dirmngr < /dev/null
 run_in_qemu pacman-key --init
-run_in_qemu pacman-key --populate archlinuxarm
-run_in_qemu pacman-key --refresh-keys
+run_in_qemu gpg --recv-keys 02922214DE8981D14DC2ACABBC704E86B823CD25
+run_in_qemu gpg --recv-keys 69DD6C8FD314223E14362848BF7EEF7A9C6B5765
+run_in_qemu gpg --recv-keys 9D22B7BB678DC056B1F7723CB55C5315DCD9EE1A
+run_in_qemu gpg --recv-keys 77193F152BDBE6A6
+#run_in_qemu pacman-key --populate archlinuxarm
+#run_in_qemu pacman-key --refresh-keys
 
 e_status "Installing packages..."
 run_in_qemu pacman -Syu --needed --noconfirm $packages
