@@ -69,6 +69,7 @@ netctl
 wpa_supplicant
 dhcpcd
 dialog 
+mesa
 networkmanager"
 
 e_status "Installing packages..."
