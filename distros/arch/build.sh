@@ -73,6 +73,7 @@ mesa
 networkmanager"
 
 run_in_qemu pacman-key --init
+run_in_qemu pacman-key --populate archlinuxarm
 
 e_status "Installing packages..."
 run_in_qemu pacman -Syu --needed --noconfirm $packages
