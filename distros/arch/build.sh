@@ -72,6 +72,8 @@ dialog
 mesa
 networkmanager"
 
+run_in_qemu pacman-key --init
+
 e_status "Installing packages..."
 run_in_qemu pacman -Syu --needed --noconfirm $packages
 
