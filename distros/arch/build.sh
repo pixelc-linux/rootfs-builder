@@ -73,6 +73,7 @@ mesa
 networkmanager"
 
 e_status "Adding Pubkeys..."
+run_in_qemu pacman-key --init
 # HACK: `pacman-key --init && pacman-key --populate archlinuxarm` hangs.
 cp distros/$DISTRO/pacman-gpg/* $SYSROOT/etc/pacman.d/gnupg
 
