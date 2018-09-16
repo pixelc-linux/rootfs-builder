@@ -38,7 +38,7 @@ function run_in_qemu(){
   PROOT_NO_SECCOMP=1 proot -0 -r $SYSROOT -q qemu-$ARCH-static -b /etc/resolv.conf -b /etc/mtab -b /proc -b /sys $*
 }
 
-ROOTFS_URL='http://cdimage.ubuntu.com/ubuntu-base/releases/18.04/release/ubuntu-base-18.04-base-arm64.tar.gz'
+ROOTFS_URL='http://cdimage.ubuntu.com/ubuntu-base/daily/current/cosmic-base-arm64.tar.gz'
 
 if [ -f /tmp/rootfs_builder_$DISTRO.tar.gz ]; then
   e_status "$DISTRO_NAME tarball is already available in /tmp/, we're going to use this file."
