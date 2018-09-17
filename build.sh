@@ -48,7 +48,8 @@ fi
 
 # Chmod
 sudo chown -R 0:0 $SYSROOT/
-sudo chown -R 1000:1000 $SYSROOT/home/alarm
+sudo chown -R 1000:1000 $SYSROOT/home/pixelc || true
+sudo chown -R 1000:1000 $SYSROOT/home/alarm || true
 
 sudo chmod +s $SYSROOT/usr/bin/chfn
 sudo chmod +s $SYSROOT/usr/bin/newgrp

@@ -91,6 +91,7 @@ network-manager
 lxdm
 openbox
 onboard
+konsole
 openssh-server
 xorg
 "
@@ -122,6 +123,7 @@ run_in_qemu systemctl enable lxdm
 run_in_qemu systemctl enable bluetooth
 run_in_qemu systemctl enable dhcpcd
 run_in_qemu systemctl enable sshd
+run_in_qemu useradd -m pixelc
 
 
 e_status "Adding Keyboard to LightDM"
